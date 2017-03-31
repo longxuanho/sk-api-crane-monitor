@@ -1,4 +1,5 @@
 var express = require('express'),
+  moment = require('moment');
   router = express.Router();
 
 module.exports = function (app, admin) {
@@ -15,6 +16,8 @@ module.exports = function (app, admin) {
           start: req.query.start,
           end: req.query.end
         }
+
+        preparedData.duration = moment(req.query.end, 'YYYY-MM-DD HH:mm:ss').diff(moment(req.query.start, 'YYYY-MM-DD HH:mm:ss'), 'seconds') || 0;
 
         admin.database().ref('sts-operation-logs').push(preparedData);
         res.status(200).end();
